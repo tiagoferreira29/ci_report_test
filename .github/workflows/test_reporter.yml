@@ -13,6 +13,11 @@ jobs:
         - name: Checkout code
           uses: actions/checkout@v2
 
+        - name: Set up Flutter
+          uses: subosito/flutter-action@v2.16.0
+          with:
+            flutter-version: "3.19.x"
+
         - name: Test Report
           uses: phoenix-actions/test-reporting@v8
           id: test-report               # Set ID reference for step
