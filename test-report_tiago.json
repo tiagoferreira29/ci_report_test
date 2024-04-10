@@ -4,8 +4,8 @@
 {"count":1,"time":4,"type":"allSuites"}
 {"testID":1,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":108779}
 {"group":{"id":2,"suiteID":0,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":12,"line":null,"column":null,"url":null},"type":"group","time":108781}
-{"test":{"id":3,"name":"(setUpAll)","suiteID":0,"groupIDs":[2],"metadata":{"skip":false,"skipReason":null},"line":56,"column":3,"url":"file:///C:/actions-runner/_work/belimo_assistant/belimo_assistant/belimo_assistant/integration_test/ui_test/nfc_multiple_screen_sizes_integration_test.dart"},"type":"testStart","time":108781}
-{"testID":3,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":108805}
+{"test":{"id":3,"name":"(setUpAll)","suiteID":0,"metadata":{"skip":false,"skipReason":null},"line":56,"column":3,"url":"file:///C:/actions-runner/_work/belimo_assistant/belimo_assistant/belimo_assistant/integration_test/ui_test/nfc_multiple_screen_sizes_integration_test.dart"},"type":"testStart","time":108781}
+{"testID":3,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":108805}
 {"group":{"id":4,"suiteID":0,"parentID":2,"name":"[NFC Workflow] Multiple screen sizes","metadata":{"skip":false,"skipReason":null},"testCount":6,"line":119,"column":3,"url":"file:///C:/actions-runner/_work/belimo_assistant/belimo_assistant/belimo_assistant/integration_test/ui_test/nfc_multiple_screen_sizes_integration_test.dart"},"type":"group","time":108805}
 {"test":{"id":5,"name":"[NFC Workflow] Multiple screen sizes Small screen","suiteID":0,"groupIDs":[2,4],"metadata":{"skip":false,"skipReason":null},"line":165,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":120,"root_column":5,"root_url":"file:///C:/actions-runner/_work/belimo_assistant/belimo_assistant/belimo_assistant/integration_test/ui_test/nfc_multiple_screen_sizes_integration_test.dart"},"type":"testStart","time":108806}
 {"testID":5,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":120992}
@@ -32,6 +32,6 @@
 {"testID":16,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":204509}
 {"test":{"id":17,"name":"[NFC Workflow Error] Multiple screen sizes Desktop Large","suiteID":0,"groupIDs":[2,11],"metadata":{"skip":false,"skipReason":null},"line":165,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":220,"root_column":5,"root_url":"file:///C:/actions-runner/_work/belimo_assistant/belimo_assistant/belimo_assistant/integration_test/ui_test/nfc_multiple_screen_sizes_integration_test.dart"},"type":"testStart","time":204509}
 {"testID":17,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":210071}
-{"test":{"id":18,"name":"(tearDownAll)","suiteID":0,"groupIDs":[2],"metadata":{"skip":false,"skipReason":null},"line":42,"column":5,"url":"package:integration_test/integration_test.dart"},"type":"testStart","time":210072}
-{"testID":18,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":210074}
+{"test":{"id":18,"name":"(tearDownAll)","suiteID":0,"metadata":{"skip":false,"skipReason":null},"line":42,"column":5,"url":"package:integration_test/integration_test.dart"},"type":"testStart","time":210072}
+{"testID":18,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":210074}
 {"success":true,"type":"done","time":210081}
