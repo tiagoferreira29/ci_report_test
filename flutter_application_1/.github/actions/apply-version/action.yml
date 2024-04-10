@@ -1,0 +1,42 @@
+name: Apply Version
+description: Applies version information in DART code
+inputs:
+  target-file:
+    description: 'The absolute path of the target file to generate holding the version information'
+    required: true
+
+  part-of-file:
+    description: 'The filename use to generate the DART part of statement'
+    required: true
+
+  information-version:
+    description: 'Informational version (major.minor.patch-preReleaseLabel+buildNumber.shortSha)'
+    required: true
+
+  pre-release-label:
+    description: 'Pre-release label'
+    required: true
+
+  sha:
+    description: 'Version source SHA'
+    required: true
+
+  sha-short:
+    description: 'Version source short SHA'
+    required: true
+
+runs:
+  using: composite
+
+  steps:
+    - name: Generate DART file
+      run: |
+        Set-Content -Path ${{ inputs.target-file }} "// GENERATED CODE - DO NOT MODIFY BY HAND"
+        Add-Content -Path ${{ inputs.target-file }} ""
+        Add-Content -Path ${{ inputs.target-file }} "part of '${{ inputs.part-of-file }}';"
+        Add-Content -Path ${{ inputs.target-file }} ""
+        Add-Content -Path ${{ inputs.target-file }} "const _internalVersion = '${{ inputs.information-version }}';"
+        Add-Content -Path ${{ inputs.target-file }} "const _preReleaseLabel = '${{ inputs.pre-release-label}}';"
+        Add-Content -Path ${{ inputs.target-file }} "const _versionSourceSha = '${{ inputs.sha }}';"
+        Add-Content -Path ${{ inputs.target-file }} "const _versionSourceShaShort = '${{ inputs.sha-short }}';"
+      shell: pwsh

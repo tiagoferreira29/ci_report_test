@@ -1,0 +1,30 @@
+name: Create License Report
+description: Create the license report (.csv) based on OSS licenses of pub dependencies.
+inputs:
+  project-folder:
+    description: "The folder where the app to build is located"
+    required: true
+  report-filepath:
+    description: 'The file path to save the license report. Expects a .csv file extension. In case of a relative path, it will be relative to the project-folder input.'
+    required: true
+  upload-artifact:
+    description: 'Boolean whether to upload as GitHub Actions artifact.'
+    required: false
+    default: 'false'
+runs:
+  using: composite
+  steps:
+    - name: Generate License Report
+      id: license-report
+      shell: bash
+      working-directory: ./${{ inputs.project-folder }}
+      run: |
+        flutter pub get
+        dart pub global activate license_checker_for_github_action
+        dart_license_checker | tr '|' ',' > ${{ inputs.report-filepath }}
+    - name: Upload License Report
+      if: ${{ inputs.upload-artifact == 'true' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: license-report
+        path: ./${{ inputs.project-folder}}/${{ inputs.report-filepath }}

@@ -1,0 +1,71 @@
+name: Generate Version Information
+description: Generates Version and Build number to stamp the build with
+inputs:
+  pre-release-label:
+    description: A label that discriminates pre-release builds from builds intended for release
+    required: false
+    default: ""
+  token:
+    description: GitHub Token to read and update GitHub Variable (GITHUB_TOKEN), requires repo scope
+    required: true
+
+outputs:
+  version:
+    description: Version number (major.minor.patch)
+    value: ${{ steps.gitversion.outputs.majorMinorPatch }}
+
+  build-number:
+    description: Build number
+    value: ${{ steps.build-number.outputs.build-number }}
+
+  revision:
+    description: Revision number (Windows only)
+    value: ${{ steps.gitversion.outputs.commitsSinceVersionSource }}
+
+  information-version:
+    description: Informational version (major.minor.patch-preReleaseLabel+buildNumber.shortSha)
+    value: "${{ steps.information-version.outputs.information-version }}"
+
+  pre-release-label:
+    description: Pre-release label
+    value: ${{ inputs.pre-release-label }}
+
+  sha:
+    description: Version source SHA
+    value: ${{ steps.gitversion.outputs.sha }}
+
+  sha-short:
+    description: Version source short SHA
+    value: ${{ steps.gitversion.outputs.shortSha }}
+
+runs:
+  using: composite
+
+  steps:
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v1.1.1
+      with:
+        versionSpec: 5.x
+    - name: Get the version
+      id: gitversion
+      uses: gittools/actions/gitversion/execute@v1.1.1
+
+    - name: Increment and output build number
+      id: build-number
+      uses: ./.github/actions/create-build-number
+      with:
+        token: ${{ inputs.token }}
+        build-number-var-name: BUILD_NUMBER
+
+    - name: Build information version
+      id: information-version
+      shell: bash
+      run: |
+        informationVersion="${{ steps.gitversion.outputs.majorMinorPatch }}"
+        if [ -n "${{ inputs.pre-release-label }}" ]; then # if pre-release label is not empty
+          informationVersion+="-${{ inputs.pre-release-label }}"
+        fi
+        informationVersion+="+${{ steps.build-number.outputs.build-number }}"
+        informationVersion+=".${{ steps.gitversion.outputs.shortSha }}"
+
+        echo information-version=$informationVersion >> $GITHUB_OUTPUT

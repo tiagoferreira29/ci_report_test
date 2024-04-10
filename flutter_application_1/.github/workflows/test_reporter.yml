@@ -1,0 +1,31 @@
+name: Test Report Tiago Test
+on:
+    push:
+      branches:
+        - master
+     # variables shared between all jobs
+
+jobs:
+    phoenix-test:
+      name: Build & Test phoenix test report
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v2
+
+        - name: Test Report
+          uses: phoenix-actions/test-reporting@v8
+          id: test-report               # Set ID reference for step
+          with:
+            name: JEST Tests            # Name of the check run which will be created
+            path: "**/test-report_tiago.json"    # Path to test results
+            reporter: "flutter-json"
+            list-suites: "failed"
+            list-tests: "failed"
+            max-annotations: "10"
+            fail-on-error: "false"
+            token: "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"
+  
+        - name: Read output variables
+          run: |
+            echo "url is ${{ steps.test-report.outputs.runHtmlUrl }}"

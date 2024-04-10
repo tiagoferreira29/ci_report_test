@@ -1,0 +1,70 @@
+name: Sign Windows Installer
+description: Sign the Windows Installer using an x.509 certificate
+
+inputs:
+  installer:
+    description: 'The installer to sign'
+    required: true
+  production:
+    description: 'Flag whether sign in production mode (true = production, false = development)'
+    required: true
+  azure-keyvault-uri:
+    description: 'The Azure KeyVault URI holding the certificate'
+    required: true
+  timestamp-uri:
+    description: 'The Timestamp service URI, required of production=true'
+    required: false
+    default: ''
+  certificate-name:
+    description: 'The Azure KeyVault Certificate Name'
+    required: true
+  tenant-id:
+    description: 'The Tenant ID of the Entra ID Application accessing KeyVault'
+    required: true
+  client-id:
+    description: 'The Client ID of the Entra ID Application accessing KeyVault'
+    required: true
+  client-secret:
+    description: 'The Client Secret of the Entra ID Application accessing KeyVault'
+    required: true
+
+runs:
+  using: composite
+
+  steps:
+    # Install AzureSignTool and ignore any the exit code as the tool might be already installed
+    - id: install-azuresigntool
+      name: 'Sign: install AzureSignTool'
+      if: runner.os == 'Windows'
+      run: | 
+        dotnet tool install --global AzureSignTool
+        return
+      shell: pwsh
+
+    # Sign the installer in production mode (aka timestamp)
+    - name: 'Sign: production signing installer'
+      if: inputs.production == 'true'
+      run: > 
+        azuresigntool sign --file-digest sha256
+        --azure-key-vault-url ${{ inputs.azure-keyvault-uri }}
+        --azure-key-vault-certificate ${{ inputs.certificate-name }}
+        --azure-key-vault-tenant-id ${{ inputs.tenant-id }} 
+        --azure-key-vault-client-id ${{ inputs.client-id }} 
+        --azure-key-vault-client-secret ${{ inputs.client-secret }}
+        --timestamp-rfc3161 ${{ inputs.timestamp-uri }} --timestamp-digest sha256
+        ${{ inputs.installer }}
+      shell: pwsh
+
+    # Sign the installer in development mode - signature is expected to expire
+    - name: 'Sign: DEV signing binaries'
+      if: inputs.production == 'false'
+      run: > 
+        azuresigntool sign --file-digest sha256
+        --azure-key-vault-url ${{ inputs.azure-keyvault-uri }}
+        --azure-key-vault-certificate ${{ inputs.certificate-name }}
+        --azure-key-vault-tenant-id ${{ inputs.tenant-id }} 
+        --azure-key-vault-client-id ${{ inputs.client-id }} 
+        --azure-key-vault-client-secret ${{ inputs.client-secret }}
+        ${{ inputs.installer }}
+      shell: pwsh
+

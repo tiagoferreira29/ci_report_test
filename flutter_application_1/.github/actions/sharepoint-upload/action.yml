@@ -1,0 +1,42 @@
+name: Upload to Sharepoint
+description: Uploads the supplied file to Sharepoint the supplied document library
+inputs:
+  certificate-base64:
+    description: "The based64 encoded private key"
+    required: true
+  certificate-password:
+    description: "The password for private key"
+    required: true
+  file:
+    description: "The path to the file to upload as json array"
+    required: true
+  tenant:
+    description: "The tenant e.g. 2g8lkm.onmicrosoft.com"
+    required: true
+  client-id:
+    description: "The client id"
+  site-url:
+    description: "The Sharepoint site e.g. https://2g8lkm.sharepoint.com/sites/test"
+    required: true
+  folder:
+    description: "The document library to upload to"
+    required: false
+    default: "Shared Documents"
+
+runs:
+  using: composite
+
+  steps:
+    - name: Install PnP module
+      shell: pwsh
+      run: |
+        Set-PSRepository PSGallery -InstallationPolicy Trusted
+        Install-Module PnP.PowerShell -Scope CurrentUser
+
+    - name: Upload file
+      shell: pwsh
+      run: |
+        $passwordSecureStr = (ConvertTo-SecureString -AsPlainText '${{ inputs.certificate-password }}' -Force)
+        Connect-PnPOnline ${{ inputs.site-url }} -CertificateBase64Encoded ${{ inputs.certificate-base64 }} -ClientId ${{ inputs.client-id }} -Tenant ${{ inputs.tenant }} -CertificatePassword $passwordSecureStr
+        Add-PnPFile -Path "${{ inputs.file }}" -Folder "${{ inputs.folder }}"
+        Disconnect-PnPOnline
