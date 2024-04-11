@@ -19,7 +19,7 @@ jobs:
             flutter-version: "3.19.x"
 
         - name: Test Report
-          uses: phoenix-actions/test-reporting@v13
+          uses: dominicmh/test-reporting@main
           id: test-report               # Set ID reference for step
           with:
             name: JEST Tests            # Name of the check run which will be created
